@@ -4,29 +4,28 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.GenerationType.IDENTITY;
-
-@Entity
 @Data
+@Document(collection = "rooms")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Room {
     @Id
-    @GeneratedValue(strategy = IDENTITY)
-    private Long id;
+    private String id;
 
     private String number;
     private int floor;
     private String hotelName;
 
-    @OneToOne(cascade = ALL)
     private RoomFacilities facilities;
+
+    public Room(String number, int floor, String hotelName, RoomFacilities facilities) {
+        this.number = number;
+        this.floor = floor;
+        this.hotelName = hotelName;
+        this.facilities = facilities;
+    }
 }

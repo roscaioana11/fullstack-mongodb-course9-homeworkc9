@@ -4,28 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import java.util.List;
-
-import static javax.persistence.CascadeType.PERSIST;
-
-@Entity
 @Data
+@Document(collection = "cleaning_procedures")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class CleaningProcedure {
     @Id
-    @GeneratedValue
-    private Long id;
+    private String id;
 
     private String name;
     private int outcome;
 
-    @ManyToMany(cascade = PERSIST)
-    List<Cleanup> cleanups;
+    private String cleanupId;
 }

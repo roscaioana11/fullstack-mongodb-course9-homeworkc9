@@ -4,28 +4,22 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-
-import static javax.persistence.CascadeType.PERSIST;
-import static javax.persistence.GenerationType.IDENTITY;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@Entity
+@Document(collection = "reviews")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Review {
     @Id
-    @GeneratedValue(strategy = IDENTITY)
-    private Long id;
+    private String id;
 
     private String message;
     private int rating;
 
-    @OneToOne(cascade = PERSIST)
-    private Tourist tourist;
+    private String tourist;
 
-    @ManyToOne
-    private Room hotelRoom;
+    private String roomId;
 }

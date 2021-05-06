@@ -54,13 +54,13 @@ public class RoomValidator {
 //        return errors.isEmpty() ? empty() : Optional.of(new ValidationException(errors));
 //    }
 
-    private Optional<ValidationException> exists(Long roomId) {
+    private Optional<ValidationException> exists(String roomId) {
         return repository.existsById(roomId)
                 ? empty()
                 : Optional.of(new ValidationException(List.of("Room with id " + roomId + " doesn't exist")));
     }
 
-    public void validateExistsOrThrow(Long roomId) {
+    public void validateExistsOrThrow(String roomId) {
         exists(roomId).ifPresent(ex -> {
             throw ex;
         });

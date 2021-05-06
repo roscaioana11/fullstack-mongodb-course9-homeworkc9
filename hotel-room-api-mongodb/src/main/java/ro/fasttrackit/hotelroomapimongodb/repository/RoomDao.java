@@ -1,49 +1,50 @@
 package ro.fasttrackit.hotelroomapimongodb.repository;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import ro.fasttrackit.hotelroomapimongodb.model.RoomFilters;
 import ro.fasttrackit.hotelroomapimongodb.model.entity.Room;
-import ro.fasttrackit.hotelroomapimongodb.model.entity.RoomFacilities;
 
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Optional.ofNullable;
 
 @Repository
+@RequiredArgsConstructor
 public class RoomDao {
-    private final EntityManager entityManager;
-    private final CriteriaBuilder criteriaBuilder;
+    private final MongoTemplate mongo;
 
-    public RoomDao(EntityManager entityManager) {
-        this.entityManager = entityManager;
-        criteriaBuilder = this.entityManager.getCriteriaBuilder();
-    }
+    public Page<Room> getAll(RoomFilters filters) {
 
-    public List<Room> getAll(RoomFilters filters){
-        CriteriaQuery<Room> criteria = criteriaBuilder.createQuery(Room.class);
-        Root<Room> rootRoom = criteria.from(Room.class);
-        Root<RoomFacilities> rootRoomFacilities = criteria.from(RoomFacilities.class);
+        Query query = new Query();
 
-        List<Predicate> whereClause = new ArrayList<>();
         ofNullable(filters.getNumber())
-                .ifPresent(number -> whereClause.add(criteriaBuilder.equal(rootRoom.get("number"), number)));
+                .ifPresent(number -> query.addCriteria(Criteria.where("number").is(number)));
         ofNullable(filters.getFloor())
-                .ifPresent(floor -> whereClause.add(criteriaBuilder.equal(rootRoom.get("floor"), floor)));
+                .ifPresent(floor -> query.addCriteria(Criteria.where("floor").is(floor)));
         ofNullable(filters.getHotelName())
-                .ifPresent(hotelName -> whereClause.add(criteriaBuilder.equal(rootRoom.get("hotelName"), hotelName)));
+                .ifPresent(hotelName -> query.addCriteria(Criteria.where("hotelName").is(hotelName)));
         ofNullable(filters.getTv())
-                .ifPresent(tv -> whereClause.add(criteriaBuilder.equal(rootRoomFacilities.get("tv"), tv)));
+                .ifPresent(tv -> query.addCriteria(Criteria.where("facilities.tv").is(tv)));
         ofNullable(filters.getDoubleBed())
-                .ifPresent(doubleBed -> whereClause.add(criteriaBuilder.equal(rootRoomFacilities.get("doubleBed"), doubleBed)));
+                .ifPresent(doubleBed -> query.addCriteria(Criteria.where("facilities.doubleBed").is(doubleBed)));
 
-        CriteriaQuery<Room> query = criteria.select(rootRoom).where(whereClause.toArray(new Predicate[0]));
+        PageRequest pageable = PageRequest.of(0, 10, Sort.by("roomNumber"));
 
-        return entityManager.createQuery(query).getResultList();
+        query.with(pageable);
+        List<Room> rooms = mongo.find(
+                query,
+                Room.class);
+        return PageableExecutionUtils.getPage(
+                rooms,
+                pageable,
+                () -> mongo.count(query, Room.class));
     }
 }

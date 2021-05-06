@@ -4,23 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
-import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
-@Entity
+@Document(collection = "room_facilities")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomFacilities {
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    private Long id;
-
     private boolean tv;
     private boolean doubleBed;
 }
