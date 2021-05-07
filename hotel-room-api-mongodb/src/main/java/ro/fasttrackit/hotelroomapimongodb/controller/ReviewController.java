@@ -4,7 +4,7 @@ import com.github.fge.jsonpatch.JsonPatch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ro.fasttrackit.hotelroomapimongodb.model.entity.Review;
-import ro.fasttrackit.hotelroomapimongodb.service.ReviewService;
+import ro.fasttrackit.hotelroomapimongodb.service.review.ReviewService;
 
 import java.util.List;
 

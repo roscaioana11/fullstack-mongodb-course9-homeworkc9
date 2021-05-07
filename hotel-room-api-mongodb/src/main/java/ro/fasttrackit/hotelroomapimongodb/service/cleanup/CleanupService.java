@@ -1,4 +1,4 @@
-package ro.fasttrackit.hotelroomapimongodb.service;
+package ro.fasttrackit.hotelroomapimongodb.service.cleanup;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,6 +10,8 @@ import ro.fasttrackit.hotelroomapimongodb.exception.ResourceNotFoundException;
 import ro.fasttrackit.hotelroomapimongodb.model.entity.Cleanup;
 import ro.fasttrackit.hotelroomapimongodb.model.entity.Room;
 import ro.fasttrackit.hotelroomapimongodb.repository.CleanupRepository;
+import ro.fasttrackit.hotelroomapimongodb.service.room.RoomService;
+import ro.fasttrackit.hotelroomapimongodb.service.room.RoomValidator;
 
 import java.util.List;
 
@@ -17,6 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CleanupService {
     private final RoomService roomService;
+    private final RoomValidator roomValidator;
+    private final CleanupValidator cleanupValidator;
     private final CleanupRepository cleanupRepository;
     private final ObjectMapper mapper;
 
@@ -25,7 +29,7 @@ public class CleanupService {
     }
 
     public Cleanup createCleanup(String roomId, Cleanup cleanup) {
-        //TODO validation
+        roomValidator.validateExistsOrThrow(roomId);
         Room room = roomService.getRoomById(roomId);
         cleanup.setRoomId(room.getId());
         return cleanupRepository.save(cleanup);
@@ -33,7 +37,8 @@ public class CleanupService {
 
     @SneakyThrows
     public Cleanup patchCleanup(String cleanupId,JsonPatch patch){
-       Cleanup dbCleanup = cleanupRepository.findById(cleanupId)
+        cleanupValidator.validateExistsOrThrow(cleanupId);
+        Cleanup dbCleanup = cleanupRepository.findById(cleanupId)
                 .orElseThrow(() -> new ResourceNotFoundException("Could not find cleanup with id " + cleanupId));
 
         JsonNode patchedCleanupJson = patch.apply(mapper.valueToTree(dbCleanup));
@@ -42,6 +47,7 @@ public class CleanupService {
     }
 
     public void deleteCleanup(String cleanupId){
+        cleanupValidator.validateExistsOrThrow(cleanupId);
         cleanupRepository.deleteById(cleanupId);
     }
 }

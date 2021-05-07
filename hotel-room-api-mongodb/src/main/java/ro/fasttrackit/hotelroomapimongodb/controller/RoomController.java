@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import ro.fasttrackit.hotelroomapimongodb.model.RoomFilters;
 import ro.fasttrackit.hotelroomapimongodb.model.entity.Room;
-import ro.fasttrackit.hotelroomapimongodb.service.RoomService;
+import ro.fasttrackit.hotelroomapimongodb.service.room.RoomService;
 
 @RestController
 @RequestMapping("rooms")
@@ -34,10 +34,4 @@ public class RoomController {
     void deleteRoom(@PathVariable String roomId){
         roomService.deleteRoom(roomId);
     }
-
-
-//    @GetMapping("/{roomId}/cleanups")
-//    List<Cleanup> getCleanupsForRoom(@PathVariable String roomId){
-//        return cleanupService.getCleanupsForRoom(roomId);
-//    }
 }

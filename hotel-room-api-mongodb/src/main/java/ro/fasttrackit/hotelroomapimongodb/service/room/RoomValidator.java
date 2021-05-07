@@ -1,4 +1,4 @@
-package ro.fasttrackit.hotelroomapimongodb.service;
+package ro.fasttrackit.hotelroomapimongodb.service.room;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -25,31 +25,31 @@ public class RoomValidator {
 //                });
 //    }
 //
-//    public void validateReplaceThrow(long productId, Room newRoom) {
-//        exists(productId)
+//    public void validateReplaceThrow(String roomId, Room newRoom) {
+//        exists(roomId)
 //                .or(() -> validate(newRoom, false))
 //                .ifPresent(ex -> {
 //                    throw ex;
 //                });
 //    }
-
+//
 //    private Optional<ValidationException> validate(Room room, boolean newEntity) {
 //        List<String> errors = new ArrayList<>();
-//        if (room.getName() == null) {
-//            errors.add("Name cannot be null");
+//        if (room.getNumber() == null) {
+//            errors.add("Number cannot be null");
 //        }
-//        if (newEntity && repository.existsByName(room.getName())) {
-//            errors.add("Name cannot be duplicate");
-//        }
-//        if (!newEntity && repository.existsByNameAndIdNot(room.getName(), room.getId())) {
-//            errors.add("Name cannot be duplicate");
-//        }
-//        if(!countries.readCity().contains(room.getCity())){
-//            errors.add("Restaurant not found in the provided city");
-//        }
-//        if(LocalDate.now().isBefore(room.getSince())) {
-//            errors.add("Open since cannot be in the future");
-//        }
+////        if (newEntity && repository.existsByNumber(room.getNumber())) {
+////            errors.add("Name cannot be duplicate");
+////        }
+////        if (!newEntity && repository.existsByNumberAndIdNot(room.getNumber(), room.getId())) {
+////            errors.add("Name cannot be duplicate");
+////        }
+////        if(!countries.readCity().contains(room.getCity())){
+////            errors.add("Restaurant not found in the provided city");
+////        }
+////        if(LocalDate.now().isBefore(room.getSince())) {
+////            errors.add("Open since cannot be in the future");
+////        }
 //
 //        return errors.isEmpty() ? empty() : Optional.of(new ValidationException(errors));
 //    }

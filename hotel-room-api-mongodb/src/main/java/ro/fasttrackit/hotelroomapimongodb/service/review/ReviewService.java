@@ -1,4 +1,4 @@
-package ro.fasttrackit.hotelroomapimongodb.service;
+package ro.fasttrackit.hotelroomapimongodb.service.review;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,6 +10,8 @@ import ro.fasttrackit.hotelroomapimongodb.exception.ResourceNotFoundException;
 import ro.fasttrackit.hotelroomapimongodb.model.entity.Review;
 import ro.fasttrackit.hotelroomapimongodb.model.entity.Room;
 import ro.fasttrackit.hotelroomapimongodb.repository.ReviewRepository;
+import ro.fasttrackit.hotelroomapimongodb.service.room.RoomService;
+import ro.fasttrackit.hotelroomapimongodb.service.room.RoomValidator;
 
 import java.util.List;
 
@@ -17,6 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReviewService {
     private final RoomService roomService;
+    private final RoomValidator roomValidator;
+    private final ReviewValidator reviewValidator;
     private final ReviewRepository reviewRepository;
     private final ObjectMapper mapper;
 
@@ -25,7 +29,7 @@ public class ReviewService {
     }
 
     public Review createReview(String roomId, Review review) {
-        //TODO validation
+        roomValidator.validateExistsOrThrow(roomId);
         Room room = roomService.getRoomById(roomId);
         review.setRoomId(room.getId());
         return reviewRepository.save(review);
@@ -33,6 +37,7 @@ public class ReviewService {
 
     @SneakyThrows
     public Review patchedReview(String reviewId, JsonPatch patch){
+        reviewValidator.validateExistsOrThrow(reviewId);
         Review dbReview = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException("Could not find review with id " + reviewId));
 
@@ -42,6 +47,7 @@ public class ReviewService {
     }
 
     public void deleteReview(String reviewId){
+        reviewValidator.validateExistsOrThrow(reviewId);
         reviewRepository.deleteById(reviewId);
     }
 }

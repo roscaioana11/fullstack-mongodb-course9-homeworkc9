@@ -4,7 +4,7 @@ import com.github.fge.jsonpatch.JsonPatch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ro.fasttrackit.hotelroomapimongodb.model.entity.Cleanup;
-import ro.fasttrackit.hotelroomapimongodb.service.CleanupService;
+import ro.fasttrackit.hotelroomapimongodb.service.cleanup.CleanupService;
 
 import java.util.List;
 

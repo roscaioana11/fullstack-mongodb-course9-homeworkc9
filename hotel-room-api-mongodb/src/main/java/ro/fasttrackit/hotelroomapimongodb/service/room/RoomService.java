@@ -1,4 +1,4 @@
-package ro.fasttrackit.hotelroomapimongodb.service;
+package ro.fasttrackit.hotelroomapimongodb.service.room;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +20,7 @@ import java.util.List;
 public class RoomService {
     private final RoomRepository repository;
     private final RoomDao dao;
+    private final RoomValidator validator;
     private final ObjectMapper mapper;
 
     public List<Room> getAllRooms(){
@@ -31,12 +32,14 @@ public class RoomService {
     }
 
     public Room getRoomById(String roomId){
+        validator.validateExistsOrThrow(roomId);
         return repository.findById(roomId)
                 .orElseThrow(() -> new ResourceNotFoundException("Could not find room with id " + roomId));
     }
 
     @SneakyThrows
     public Room patchRoom(String roomId, JsonPatch patch){
+        validator.validateExistsOrThrow(roomId);
         Room dbRoom = repository.findById(roomId)
                 .orElseThrow(() -> new ResourceNotFoundException("Could not find room with id " + roomId));
 
@@ -46,6 +49,7 @@ public class RoomService {
     }
 
     public void deleteRoom(String roomId){
+        validator.validateExistsOrThrow(roomId);
         repository.deleteById(roomId);
     }
 }
