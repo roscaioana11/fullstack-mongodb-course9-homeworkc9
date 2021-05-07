@@ -25,6 +25,7 @@ public class CleanupService {
     private final ObjectMapper mapper;
 
     public List<Cleanup> getCleanupsForRoom(String roomId){
+        roomValidator.validateExistsOrThrow(roomId);
         return cleanupRepository.findByRoomId(roomId);
     }
 

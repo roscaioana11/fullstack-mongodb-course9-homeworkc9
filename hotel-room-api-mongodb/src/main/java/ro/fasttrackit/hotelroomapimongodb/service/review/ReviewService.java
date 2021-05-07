@@ -25,6 +25,7 @@ public class ReviewService {
     private final ObjectMapper mapper;
 
     public List<Review> getReviewsForRoom(String roomId){
+        roomValidator.validateExistsOrThrow(roomId);
         return reviewRepository.findByRoomId(roomId);
     }
 
