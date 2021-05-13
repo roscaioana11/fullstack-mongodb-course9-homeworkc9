@@ -6,6 +6,7 @@ import com.github.fge.jsonpatch.JsonPatch;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ro.fasttrackit.hotelroomapimongodb.exception.ResourceNotFoundException;
 import ro.fasttrackit.hotelroomapimongodb.model.RoomFilters;
@@ -27,8 +28,8 @@ public class RoomService {
         return repository.findAll();
     }
 
-    public Page<Room> getFilteredRooms(RoomFilters filters){
-        return dao.getAll(filters);
+    public Page<Room> getFilteredRooms(RoomFilters filters, Pageable pageable){
+        return dao.getAll(filters, pageable);
     }
 
     public Room getRoomById(String roomId){

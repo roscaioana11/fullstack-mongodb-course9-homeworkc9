@@ -3,6 +3,7 @@ package ro.fasttrackit.hotelroomapimongodb.controller;
 import com.github.fge.jsonpatch.JsonPatch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import ro.fasttrackit.hotelroomapimongodb.model.RoomFilters;
 import ro.fasttrackit.hotelroomapimongodb.model.entity.Room;
@@ -15,8 +16,8 @@ public class RoomController {
     private final RoomService roomService;
 
     @GetMapping
-    Page<Room> getFilteredRoomsOrAllRooms(RoomFilters filters){
-        return roomService.getFilteredRooms(filters);
+    Page<Room> getFilteredRoomsOrAllRooms(RoomFilters filters, Pageable pageable){
+        return roomService.getFilteredRooms(filters, pageable);
     }
 
     @GetMapping("{roomId}")
